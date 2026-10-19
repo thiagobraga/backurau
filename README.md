@@ -40,6 +40,16 @@ Web service (`docs/screens/web/`): token screen, then the same Compare view on a
 | --- | --- |
 | ![Compare on a phone, light](docs/screens/web/compare-phone-light.png) | ![Compare on a phone, dark](docs/screens/web/compare-phone-dark.png) |
 
+Phone width (390px), desktop app views and dialogs (`docs/screens/app/`):
+
+| Review before running | Resolve conflict |
+| --- | --- |
+| ![Review before running, phone](docs/screens/app/review-phone-light.png) | ![Resolve conflict, phone](docs/screens/app/conflict-phone-light.png) |
+
+| Snapshots | Settings |
+| --- | --- |
+| ![Snapshots, phone](docs/screens/app/snapshots-phone-light.png) | ![Settings, phone](docs/screens/app/settings-phone-light.png) |
+
 The screenshots were taken in Chrome from the same React UI the desktop window loads, using temporary fixture folders. The native Tauri window itself was not captured.
 
 ## Run
