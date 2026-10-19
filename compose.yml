@@ -1,0 +1,68 @@
+name: backurau
+
+services:
+  # Authenticated service. Build the UI with `npm run build --prefix tauri-app`.
+  # Container paths are intentionally isolated from the host's personal files.
+  server:
+    build:
+      context: .
+      dockerfile: .docker/server/Dockerfile
+      target: development
+    container_name: ${COMPOSE_PROJECT_NAME:-backurau}-server
+    networks: [default, proxy]
+    volumes:
+      - ./server:/app/server
+      - ./core:/app/core
+      - ./tauri-app/ui:/app/tauri-app/ui
+      - service-data:/data
+      - cargo:/cargo
+      - target:/target
+    # Bind-mounted source: run as the host user so nothing root-owned lands in the tree.
+    user: "${DOCKER_USER:-1000:1000}"
+    environment:
+      BIND: 0.0.0.0
+      PORT: 8787
+      BACKURAU_DATA_DIR: /data
+      BACKURAU_ALLOW_REMOTE: "1"
+      BACKURAU_ALLOWED_ORIGINS: "https://${APP_SUBDOMAIN:-backurau}.local"
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://127.0.0.1:8787/health"]
+      interval: 2s
+      timeout: 3s
+      retries: 90
+      start_period: 120s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-backurau}-server-router.rule=Host(`${APP_SUBDOMAIN:-backurau}.local`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-backurau}-server-router.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-backurau}-server-router.tls=true"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME:-backurau}-server-service.loadbalancer.server.port=8787"
+
+  # Builds the Tauri .deb into ./dist. Run on demand:
+  #   docker compose --profile build run --rm bundle
+  # `tauri dev` needs a display, so it stays on the host (see CLAUDE.md).
+  bundle:
+    build:
+      context: .
+      dockerfile: .docker/bundle/Dockerfile
+      target: bundle
+    container_name: ${COMPOSE_PROJECT_NAME:-backurau}-bundle
+    profiles: [build]
+    user: "${DOCKER_USER:-1000:1000}"
+    volumes:
+      - ./tauri-app:/app/tauri-app
+      - ./core:/app/core
+      - ./dist:/out
+      - cargo:/cargo
+      - bundle-target:/target
+
+volumes:
+  cargo:
+  target:
+  bundle-target:
+  service-data:
+
+networks:
+  proxy:
+    external: true

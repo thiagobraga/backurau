@@ -1,0 +1,130 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Docker Run",
+      "type": "shell",
+      "command": "bash .vscode/tasks.sh",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build"
+      },
+      "icon": {
+        "id": "vm-running",
+        "color": "terminal.ansiBlue"
+      },
+      "presentation": {
+        "clear": true,
+        "focus": true,
+        "panel": "shared",
+        "reveal": "always",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "Desktop",
+      "type": "shell",
+      "command": "cd tauri-app && npm install && npm run tauri dev",
+      "problemMatcher": [],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "icon": {
+        "id": "desktop-download",
+        "color": "terminal.ansiRed"
+      },
+      "presentation": {
+        "clear": true,
+        "focus": false,
+        "panel": "dedicated",
+        "reveal": "always",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "Claude",
+      "type": "shell",
+      "command": "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model sonnet",
+      "problemMatcher": [],
+      "icon": {
+        "id": "robot",
+        "color": "terminal.ansiYellow"
+      },
+      "presentation": {
+        "clear": true,
+        "focus": false,
+        "panel": "dedicated",
+        "reveal": "always",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "Codex",
+      "type": "shell",
+      "command": "codex --dangerously-bypass-approvals-and-sandbox --no-daemon -m gpt-6-sol",
+      "problemMatcher": [],
+      "icon": {
+        "id": "robot"
+      },
+      "presentation": {
+        "clear": true,
+        "focus": false,
+        "panel": "dedicated",
+        "reveal": "always",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "Antigravity",
+      "type": "shell",
+      "command": "agy --dangerously-skip-permissions",
+      "problemMatcher": [],
+      "icon": {
+        "id": "robot",
+        "color": "terminal.ansiGreen"
+      },
+      "presentation": {
+        "clear": true,
+        "focus": false,
+        "panel": "dedicated",
+        "reveal": "always",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "OpenCode",
+      "type": "shell",
+      "command": "opencode --auto",
+      "problemMatcher": [],
+      "icon": {
+        "id": "robot",
+        "color": "terminal.ansiBlack"
+      },
+      "presentation": {
+        "clear": true,
+        "focus": false,
+        "panel": "dedicated",
+        "reveal": "always",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "Dev",
+      "dependsOn": [
+        "Claude",
+        "Codex",
+        "Antigravity",
+        "OpenCode",
+        "Docker Run",
+        "Desktop"
+      ],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
