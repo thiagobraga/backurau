@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Linux system libraries (Tauri, OS keyring)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libdbus-1-dev libssl-dev pkg-config
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            core
+            server
+            tauri-app/src-tauri
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tauri-app/package-lock.json
+
+      - name: Engine tests
+        run: cargo test --manifest-path core/Cargo.toml
+
+      - name: UI install and tests
+        working-directory: tauri-app
+        run: |
+          npm ci
+          npm test
+          npm run build
+
+      - name: Server build and HTTP integration
+        shell: bash
+        run: |
+          cargo build --manifest-path server/Cargo.toml
+          node scripts/verify-integration.mjs
+
+      - name: Desktop bundle (Linux deb)
+        if: runner.os == 'Linux'
+        working-directory: tauri-app
+        run: npm run tauri build -- --bundles deb
+
+      - name: Desktop bundle (Windows and macOS defaults)
+        if: runner.os != 'Linux'
+        working-directory: tauri-app
+        run: npm run tauri build
+
+      - name: Upload bundles
+        uses: actions/upload-artifact@v4
+        with:
+          name: backurau-${{ runner.os }}
+          path: |
+            tauri-app/src-tauri/target/release/bundle/
+          if-no-files-found: error
