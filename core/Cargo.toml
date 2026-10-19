@@ -1,0 +1,13 @@
+[package]
+name = "backurau-core"
+version = "0.1.0"
+edition = "2021"
+description = "Shared Backurau engine: plans, comparison, execution, history and restore"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4"] }
+regex = "1"
+sha2 = "0.10"
+keyring = { version = "3", features = ["apple-native", "windows-native", "sync-secret-service", "crypto-rust"] }
