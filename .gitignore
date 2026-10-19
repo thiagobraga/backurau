@@ -1,0 +1,14 @@
+node_modules/
+**/target/
+tauri-app/ui/
+dist/
+.omx/
+.remember/
+.unlazy/
+.impeccable/review/
+.env
+*.log
+playwright-report/
+test-results/
+.backup/
+.playwright-mcp/

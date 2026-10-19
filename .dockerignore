@@ -1,0 +1,17 @@
+# Folders
+.claude
+.remember
+.vscode
+dist
+node_modules
+**/node_modules
+**/target
+
+# Files
+.dockerignore
+.env
+.env.*.local
+.gitignore
+*.log
+*.key
+*.pem
