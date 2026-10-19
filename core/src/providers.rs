@@ -551,6 +551,13 @@ pub fn capabilities() -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Once;
+
+    /// Tests never touch the user's real keychain or a Secret Service daemon.
+    fn mock_credential_store() {
+        static ONCE: Once = Once::new();
+        ONCE.call_once(|| keyring::set_default_credential_builder(keyring::mock::default_credential_builder()));
+    }
 
     #[test]
     fn parses_rfc3339() {
@@ -560,7 +567,8 @@ mod tests {
 
     #[test]
     fn builds_rclone_specs_without_secrets_on_the_command_line() {
-        let c = json!({"id": "x", "kind": "s3", "address": "https://s3.example.com", "user": "AK", "options": {"path": "bucket/dir"}});
+        mock_credential_store();
+        let c =json!({"id": "x", "kind": "s3", "address": "https://s3.example.com", "user": "AK", "options": {"path": "bucket/dir"}});
         let p = Provider::new(json!([c]));
         match p.resolve("connection://x/sub").unwrap() {
             Location::Rclone { spec, env } => {
