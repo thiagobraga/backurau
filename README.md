@@ -18,6 +18,30 @@ Everything on screen comes from the engine. There is no demo data, and plans onl
 
 Not verified on this Linux host: Windows and macOS builds, and live cloud-provider sign-in. rclone-based connections need rclone installed.
 
+## Screenshots
+
+Desktop app (`docs/screens/app/`), light and dark:
+
+| Compare | Compare, dark |
+| --- | --- |
+| ![Compare, light](docs/screens/app/compare-light.png) | ![Compare, dark](docs/screens/app/compare-dark.png) |
+
+| Snapshots, dark | Activity, light |
+| --- | --- |
+| ![Snapshots, dark](docs/screens/app/snapshots-dark.png) | ![Activity, light](docs/screens/app/activity-light.png) |
+
+Web service (`docs/screens/web/`): token screen, then the same Compare view on a phone-width screen.
+
+| Token screen, light | Token screen, dark |
+| --- | --- |
+| ![Token screen, light](docs/screens/web/token-light.png) | ![Token screen, dark](docs/screens/web/token-dark.png) |
+
+| Compare on a phone, light | Compare on a phone, dark |
+| --- | --- |
+| ![Compare on a phone, light](docs/screens/web/compare-phone-light.png) | ![Compare on a phone, dark](docs/screens/web/compare-phone-dark.png) |
+
+The screenshots were taken in Chrome from the same React UI the desktop window loads, using temporary fixture folders. The native Tauri window itself was not captured.
+
 ## Run
 
 ```bash
